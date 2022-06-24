@@ -286,7 +286,7 @@ window.redirectable = {
             if (this.debug) console.log('keep-en');
             // Английский сохранён
             if (this.location != stored_lang) {
-                window.location.href = this.redirect_data.link_ru + window.location.search;
+                window.location.href = this.redirect_data.link_en + window.location.search;
             }
         } else {
             if (this.debug) console.log('req-go');
