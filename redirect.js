@@ -260,12 +260,19 @@ window.redirectable = {
     check_redirect: function () {
         let stored_lang = localStorage.getItem('delo_lang');
         if (stored_lang != null && stored_lang == 'ru') {
+            console.log('keep-ru');
             // Русский сохранён
-            window.location.href = this.redirect_data.link_ru + window.location.search;
+            if (this.location != stored_lang) {
+                window.location.href = this.redirect_data.link_ru + window.location.search;
+            }
         } else if (stored_lang != null && stored_lang == 'en') {
+            console.log('keep-en');
             // Английский сохранён
-            window.location.href = this.redirect_data.link_ru + window.location.search;
+            if (this.location != stored_lang) {
+                window.location.href = this.redirect_data.link_ru + window.location.search;
+            }
         } else {
+            console.log('req-go');
             // Не сохранено ничего
             this.redirect_request(this.redirect_data);
         }
@@ -273,15 +280,17 @@ window.redirectable = {
     },
 
     redirect_request: function (redirect_data) {
-        var request = new XMLHttpRequest();
+        let request = new XMLHttpRequest();
 
         request.open("GET", "https://geo.tildacdn.com/geo/full/", true);
         request.timeout = 1000 * 15;
         request.onload = () => {
-            var geo = JSON.parse(request.response);
+            let geo = JSON.parse(request.response);
             if (this.status >= 200 && this.status < 400) {
+                console.log('request-done');
                 this.mixed_redirect(geo, redirect_data);
             } else {
+                console.log('request-error');
                 this.mixed_redirect(geo, redirect_data);
             }
         };
@@ -289,12 +298,14 @@ window.redirectable = {
     },
 
     mixed_redirect: function (geo, redirect_data) {
+        console.log('mixed-start');
+        console.log(JSON.stringify(geo) + ' - ' + JSON.stringify(redirect_data));
         if (!geo || !redirect_data) return;
         console.log('mixed-empty');
         if (!window.isSearchBot) {
-            var city = geo.city.name_en;
-            var region = geo.region.name_en;
-            var country = geo.country.iso;
+            let city = geo.city.name_en;
+            let region = geo.region.name_en;
+            let country = geo.country.iso;
 
             console.log('mixed-notbot');
 
