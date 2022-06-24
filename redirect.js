@@ -266,15 +266,23 @@ window.redirectable = {
     },
 
     check_redirect: function () {
-        let stored_lang = localStorage.getItem('delo_lang');
         let overriden = this.check_override();
-        if (!overriden && stored_lang != null && stored_lang == 'ru') {
+        if (overriden) {
+            localStorage.removeItem('delo_lang');
+            localStorage.setItem('delo_lang', this.location);
+            if (this.debug) console.log('override-' + this.location);
+            return;
+        }
+
+        let stored_lang = localStorage.getItem('delo_lang');
+
+        if (stored_lang != null && stored_lang == 'ru') {
             if (this.debug) console.log('keep-ru');
             // Русский сохранён
             if (this.location != stored_lang) {
                 window.location.href = this.redirect_data.link_ru + window.location.search;
             }
-        } else if (!overriden && stored_lang != null && stored_lang == 'en') {
+        } else if (stored_lang != null && stored_lang == 'en') {
             if (this.debug) console.log('keep-en');
             // Английский сохранён
             if (this.location != stored_lang) {
