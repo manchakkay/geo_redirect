@@ -309,35 +309,33 @@ window.redirectable = {
 
             console.log('mixed-notbot');
 
-            Array.prototype.forEach.call(redirect_data, (value) => {
-                console.log('mixed-in-data');
-                // Проверка перехода на англ.
-                if (
-                    value.geo_en.indexOf(country) !== -1 ||
-                    value.geo_en.indexOf(region) !== -1 ||
-                    value.geo_en.indexOf(city) !== -1
-                ) {
-                    console.log('found-en');
-                    localStorage.setItem('delo_lang', 'en');
-                    if (this.location != 'en') {
-                        console.log('mixed-redirect-en');
-                        window.location.href = value.link_en + window.location.search;
-                    }
+            // Проверка перехода на англ.
+            if (
+                this.redirect_data.geo_en.indexOf(country) !== -1 ||
+                this.redirect_data.geo_en.indexOf(region) !== -1 ||
+                this.redirect_data.geo_en.indexOf(city) !== -1
+            ) {
+                console.log('found-en');
+                localStorage.setItem('delo_lang', 'en');
+                if (this.location != 'en') {
+                    console.log('mixed-redirect-en');
+                    window.location.href = this.redirect_data.link_en + window.location.search;
                 }
-                // Проверка перехода на ру.
-                if (
-                    value.geo_ru.indexOf(country) !== -1 ||
-                    value.geo_ru.indexOf(region) !== -1 ||
-                    value.geo_ru.indexOf(city) !== -1
-                ) {
-                    console.log('found-ru');
-                    localStorage.setItem('delo_lang', 'ru');
-                    if (this.location != 'ru') {
-                        console.log('mixed-redirect-ru');
-                        window.location.href = value.link_ru + window.location.search;
-                    }
+            }
+            // Проверка перехода на ру.
+            if (
+                this.redirect_data.geo_ru.indexOf(country) !== -1 ||
+                this.redirect_data.geo_ru.indexOf(region) !== -1 ||
+                this.redirect_data.geo_ru.indexOf(city) !== -1
+            ) {
+                console.log('found-ru');
+                localStorage.setItem('delo_lang', 'ru');
+                if (this.location != 'ru') {
+                    console.log('mixed-redirect-ru');
+                    window.location.href = this.redirect_data.link_ru + window.location.search;
                 }
-            });
+            }
+
         }
     },
 };
