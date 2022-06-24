@@ -1,4 +1,4 @@
-var redirectable = {
+window.redirectable = {
     init: function (location = 'ru') {
         this.location = location;
         this.check_redirect();
