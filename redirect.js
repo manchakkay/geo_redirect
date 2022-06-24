@@ -290,20 +290,26 @@ window.redirectable = {
 
     mixed_redirect: function (geo, redirect_data) {
         if (!geo || !redirect_data) return;
+        console.log('mixed-empty');
         if (!window.isSearchBot) {
             var city = geo.city.name_en;
             var region = geo.region.name_en;
             var country = geo.country.iso;
 
+            console.log('mixed-notbot');
+
             Array.prototype.forEach.call(redirect_data, (value) => {
+                console.log('mixed-in-data');
                 // Проверка перехода на англ.
                 if (
                     value.geo_en.indexOf(country) !== -1 ||
                     value.geo_en.indexOf(region) !== -1 ||
                     value.geo_en.indexOf(city) !== -1
                 ) {
+                    console.log('found-en');
                     localStorage.setItem('delo_lang', 'en');
                     if (this.location != 'en') {
+                        console.log('mixed-redirect-en');
                         window.location.href = value.link_en + window.location.search;
                     }
                 }
@@ -313,8 +319,10 @@ window.redirectable = {
                     value.geo_ru.indexOf(region) !== -1 ||
                     value.geo_ru.indexOf(city) !== -1
                 ) {
+                    console.log('found-ru');
                     localStorage.setItem('delo_lang', 'ru');
                     if (this.location != 'ru') {
+                        console.log('mixed-redirect-ru');
                         window.location.href = value.link_ru + window.location.search;
                     }
                 }
