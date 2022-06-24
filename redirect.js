@@ -1,10 +1,12 @@
 window.redirectable = {
-    init: function (location = 'ru') {
+    init: function (location = 'ru', debug = false) {
         this.location = location;
+        this.debug = debug;
         this.check_redirect();
     },
 
     location: "ru",
+    debug: false,
     redirect_data: {
         link_ru: "/",
         link_en: "/en",
@@ -257,22 +259,29 @@ window.redirectable = {
         ],
     },
 
+    check_override: function () {
+        let url = window.location.href;
+        // Language value override => /en?lang_vo
+        return url.indexOf('lang_vo') !== -1;
+    },
+
     check_redirect: function () {
         let stored_lang = localStorage.getItem('delo_lang');
-        if (stored_lang != null && stored_lang == 'ru') {
-            console.log('keep-ru');
+        let overriden = this.check_override();
+        if (!overriden && stored_lang != null && stored_lang == 'ru') {
+            if (this.debug) console.log('keep-ru');
             // Русский сохранён
             if (this.location != stored_lang) {
                 window.location.href = this.redirect_data.link_ru + window.location.search;
             }
-        } else if (stored_lang != null && stored_lang == 'en') {
-            console.log('keep-en');
+        } else if (!overriden && stored_lang != null && stored_lang == 'en') {
+            if (this.debug) console.log('keep-en');
             // Английский сохранён
             if (this.location != stored_lang) {
                 window.location.href = this.redirect_data.link_ru + window.location.search;
             }
         } else {
-            console.log('req-go');
+            if (this.debug) console.log('req-go');
             // Не сохранено ничего
             this.redirect_request(this.redirect_data);
         }
@@ -287,10 +296,10 @@ window.redirectable = {
         request.onload = () => {
             let geo = JSON.parse(request.response);
             if (this.status >= 200 && this.status < 400) {
-                console.log('request-done');
+                if (this.debug) console.log('request-done');
                 this.mixed_redirect(geo, redirect_data);
             } else {
-                console.log('request-error');
+                if (this.debug) console.log('request-error');
                 this.mixed_redirect(geo, redirect_data);
             }
         };
@@ -298,16 +307,16 @@ window.redirectable = {
     },
 
     mixed_redirect: function (geo, redirect_data) {
-        console.log('mixed-start');
-        console.log(JSON.stringify(geo) + ' - ' + JSON.stringify(redirect_data));
+        if (this.debug) console.log('mixed-start');
+        if (this.debug) console.log(JSON.stringify(geo) + ' - ' + JSON.stringify(redirect_data));
         if (!geo || !redirect_data) return;
-        console.log('mixed-empty');
+        if (this.debug) console.log('mixed-empty');
         if (!window.isSearchBot) {
             let city = geo.city.name_en;
             let region = geo.region.name_en;
             let country = geo.country.iso;
 
-            console.log('mixed-notbot');
+            if (this.debug) console.log('mixed-notbot');
 
             // Проверка перехода на англ.
             if (
@@ -315,10 +324,10 @@ window.redirectable = {
                 this.redirect_data.geo_en.indexOf(region) !== -1 ||
                 this.redirect_data.geo_en.indexOf(city) !== -1
             ) {
-                console.log('found-en');
+                if (this.debug) console.log('found-en');
                 localStorage.setItem('delo_lang', 'en');
                 if (this.location != 'en') {
-                    console.log('mixed-redirect-en');
+                    if (this.debug) console.log('mixed-redirect-en');
                     window.location.href = this.redirect_data.link_en + window.location.search;
                 }
             }
@@ -328,10 +337,10 @@ window.redirectable = {
                 this.redirect_data.geo_ru.indexOf(region) !== -1 ||
                 this.redirect_data.geo_ru.indexOf(city) !== -1
             ) {
-                console.log('found-ru');
+                if (this.debug) console.log('found-ru');
                 localStorage.setItem('delo_lang', 'ru');
                 if (this.location != 'ru') {
-                    console.log('mixed-redirect-ru');
+                    if (this.debug) console.log('mixed-redirect-ru');
                     window.location.href = this.redirect_data.link_ru + window.location.search;
                 }
             }
