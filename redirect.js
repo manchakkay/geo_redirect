@@ -8,7 +8,7 @@ window.redirectable = {
     location: "ru",
     debug: false,
     redirect_data: {
-        link_ru: "/",
+        link_ru: "/ru",
         link_en: "/en",
         geo_ru: [
             "BY", "KZ", "KG", "KGZ", "RU", "TJ"
