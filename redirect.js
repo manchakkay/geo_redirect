@@ -276,22 +276,26 @@ window.redirectable = {
 
         let stored_lang = localStorage.getItem('delo_lang');
 
+        try {
         if (stored_lang != null && stored_lang == 'ru') {
             if (this.debug) console.log('keep-ru');
             // Русский сохранён
             if (this.location != stored_lang) {
-                window.location.replace(this.redirect_data.link_ru + window.location.search);
+                console.info(window.location.replace(this.redirect_data.link_ru + window.location.search));
             }
         } else if (stored_lang != null && stored_lang == 'en') {
             if (this.debug) console.log('keep-en');
             // Английский сохранён
             if (this.location != stored_lang) {
-                window.location.replace(this.redirect_data.link_en + window.location.search);
+                console.info(window.location.replace(this.redirect_data.link_en + window.location.search));
             }
         } else {
             if (this.debug) console.log('req-go');
             // Не сохранено ничего
             this.redirect_request(this.redirect_data);
+        }
+        } catch (e) {
+            if (this.debug) console.log(e);
         }
 
     },
